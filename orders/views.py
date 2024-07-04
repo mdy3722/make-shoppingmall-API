@@ -14,7 +14,7 @@ def create_order(request):
         if serializer.is_valid():
             order = serializer.save()
             return Response(OrderResponseSerializer(order).data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serverMessage("요청 양식 불량"), status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'DELETE'])
 def order_detail(request, pk):
@@ -29,7 +29,7 @@ def order_detail(request, pk):
         try:
           order = Order.objects.get(pk=pk)
         except order.DoesNotExist:
-          return Response(serverMessage("존재하지 않는 주문"), status=status.HTTP_404_NOT_FOUND)
+          return Response(serverMessage("주문 내용이 존재하지 않습니다."), status=status.HTTP_404_NOT_FOUND)
         order.delete()
         return Response(serverMessage("주문 취소 성공"), status=status.HTTP_200_OK)
 
